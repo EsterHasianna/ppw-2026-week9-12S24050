@@ -17,9 +17,19 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-del shadow-sm mb-4">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('buku.index') }}">SIPUS-Del</a>
-            <div class="navbar-nav flex-row gap-3">
+            <div class="navbar-nav flex-row align-items-center gap-3">
                 <a class="nav-link {{ request()->routeIs('buku.*') ? 'active fw-bold' : '' }}" href="{{ route('buku.index') }}">Buku</a>
                 <a class="nav-link {{ request()->routeIs('kategori.*') ? 'active fw-bold' : '' }}" href="{{ route('kategori.index') }}">Kategori</a>
+
+                @auth
+                    <span class="navbar-text small text-white-50">
+                        {{ auth()->user()->name }} · Login sejak {{ session('login_timestamp') }}
+                    </span>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                    </form>
+                @endauth
             </div>
         </div>
     </nav>
