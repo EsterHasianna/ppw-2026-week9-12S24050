@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\Soap\LibrarySoapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('buku.index'));
@@ -28,3 +29,7 @@ Route::middleware('auth')->group(function () {
 
 // show buku dipasang setelah grup agar /buku/create tidak tertimpa {buku}
 Route::get('/buku/{buku}', [BukuController::class, 'show'])->name('buku.show');
+
+// SOAP: layanan legacy untuk cek bebas pustaka (CSRF dikecualikan di bootstrap/app.php)
+Route::get('/soap/sipus.wsdl', [LibrarySoapController::class, 'wsdl']);
+Route::post('/soap/sipus', [LibrarySoapController::class, 'handle']);
