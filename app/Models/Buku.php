@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Buku extends Model
 {
+    
     use HasFactory;
 
     protected $fillable = [
