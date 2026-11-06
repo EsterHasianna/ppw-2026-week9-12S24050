@@ -1,0 +1,243 @@
+{
+  "info": {
+    "name": "SIPUS-Del API v1 (Week 9)",
+    "_postman_id": "sipus-del-apiv1-week9",
+    "description": "Koleksi uji REST API v1 dan SOAP SIPUS-Del. Set variabel base_url dan token setelah login.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "ISI_TOKEN_DARI_LOGIN" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "01 Login (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pustakawan@del.ac.id\",\n  \"password\": \"password123\",\n  \"device_name\": \"postman-week9\"\n}"
+            },
+            "url": "{{base_url}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "02 Me (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/api/v1/auth/me"
+          }
+        },
+        {
+          "name": "03 Logout (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/api/v1/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buku",
+      "item": [
+        {
+          "name": "10 Katalog publik (200)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/bukus?per_page=3&sort=stok&dir=desc"
+          }
+        },
+        {
+          "name": "11 Detail buku (200)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/v1/bukus/24"
+          }
+        },
+        {
+          "name": "12 Tanpa token (401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{base_url}}/api/v1/bukus"
+          }
+        },
+        {
+          "name": "13 Validasi kosong (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{base_url}}/api/v1/bukus"
+          }
+        },
+        {
+          "name": "14 Tambah buku (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isbn\": \"9786020000028\",\n  \"judul\": \"Pemrograman Web dengan Laravel\",\n  \"penulis\": \"Chandro Pardede\",\n  \"penerbit\": \"Informatika\",\n  \"tahun_terbit\": 2026,\n  \"kategori_id\": 1,\n  \"stok\": 5,\n  \"sinopsis\": \"Buku panduan praktikum PPW.\"\n}"
+            },
+            "url": "{{base_url}}/api/v1/bukus"
+          }
+        },
+        {
+          "name": "15 PATCH stok (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"stok\": 2\n}" },
+            "url": "{{base_url}}/api/v1/bukus/24"
+          }
+        },
+        {
+          "name": "16 PUT penuh (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isbn\": \"9786020000011\",\n  \"judul\": \"Pemrograman Web dengan Laravel\",\n  \"penulis\": \"Chandro Pardede\",\n  \"penerbit\": \"Informatika\",\n  \"tahun_terbit\": 2026,\n  \"kategori_id\": 1,\n  \"stok\": 5\n}"
+            },
+            "url": "{{base_url}}/api/v1/bukus/24"
+          }
+        },
+        {
+          "name": "17 Hapus buku dipinjam (409)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/api/v1/bukus/24"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Peminjaman",
+      "item": [
+        {
+          "name": "20 Pinjam buku (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"buku_id\": 24,\n  \"nim_peminjam\": \"12S24050\",\n  \"nama_peminjam\": \"Ester Hasianna Nainggolan\",\n  \"durasi_hari\": 7\n}"
+            },
+            "url": "{{base_url}}/api/v1/peminjamans"
+          }
+        },
+        {
+          "name": "21 Pinjam ulang NIM sama (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"buku_id\": 24,\n  \"nim_peminjam\": \"12S24050\",\n  \"nama_peminjam\": \"Ester Hasianna Nainggolan\",\n  \"durasi_hari\": 7\n}"
+            },
+            "url": "{{base_url}}/api/v1/peminjamans"
+          }
+        },
+        {
+          "name": "22 Kembalikan buku (200)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/api/v1/peminjamans/5/kembalikan"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SOAP",
+      "item": [
+        {
+          "name": "30 WSDL (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/soap/sipus.wsdl"
+          }
+        },
+        {
+          "name": "31 CheckClearanceStatus sukses (200)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:m=\"http://sipus.del.ac.id/soap/sipus\">\n  <soap:Body>\n    <m:CheckClearanceStatus>\n      <m:nim_peminjam>12S24050</m:nim_peminjam>\n    </m:CheckClearanceStatus>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "{{base_url}}/soap/sipus"
+          }
+        },
+        {
+          "name": "32 SOAP Fault NIM kosong (500)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:m=\"http://sipus.del.ac.id/soap/sipus\">\n  <soap:Body>\n    <m:CheckClearanceStatus>\n      <m:nim_peminjam></m:nim_peminjam>\n    </m:CheckClearanceStatus>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "{{base_url}}/soap/sipus"
+          }
+        }
+      ]
+    }
+  ]
+}
